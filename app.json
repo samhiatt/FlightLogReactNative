@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "FlightLogReactNative",
+    "description": "Try out react-navigation with this awesome Redux example",
+    "version": "1.0.0",
+    "slug": "FlightLogReactNative",
+    "privacy": "public",
+    "orientation": "portrait",
+    "primaryColor": "#cccccc",
+    "loading": {
+      "hideExponentText": false
+    },
+    "sdkVersion": "25.0.0",
+    "entryPoint": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
+    "packagerOpts": {
+      "assetExts": ["ttf", "mp4"]
+    },
+    "ios": {
+      "supportsTablet": true
+    }
+  }
+}
