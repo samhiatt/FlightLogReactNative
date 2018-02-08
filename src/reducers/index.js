@@ -36,8 +36,18 @@ function lastAction(state = null, action) {
   return action;
 }
 
+function rehydrated(state={isRehydrated:false}, action){
+  switch (action.type){
+    case 'STATE_RESTORED':
+      return { ...state, isRehydrated:true };
+    default: 
+      return state;
+  }
+}
+
 const AppReducer = combineReducers({
   lastAction,
+  rehydrated,
   nav,
   auth: authReducer,
   firebase: firebaseReducer,

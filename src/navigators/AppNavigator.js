@@ -2,13 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { BackHandler } from "react-native";
+import { Text, Container, Content } from 'native-base';
+import Expo from 'expo';
 import { addNavigationHelpers, StackNavigator, NavigationActions } from 'react-navigation';
 
 import LoginScreen from '../components/LoginScreen';
 import MainScreen from '../components/MainScreen';
 import ProfileScreen from '../components/ProfileScreen';
+import FlightsScreen from '../components/FlightsScreen';
 
-import { firebaseDb } from '../firebase';
+// import { firebaseDb, firebaseApp } from '../firebase';
 import { 
   setFirebaseAuthResponse, 
   setAuthProvider, 
@@ -22,6 +25,7 @@ export const AppNavigator = StackNavigator({
   Login: { screen: LoginScreen },
   Main: { screen: MainScreen },
   Profile: { screen: ProfileScreen },
+  Flights: { screen: FlightsScreen },
 });
 
 class AppWithNavigationState extends React.Component {
@@ -40,9 +44,9 @@ class AppWithNavigationState extends React.Component {
       },
     };
   };
-  componentWillMount(){
-    // this.props.setFirebaseAuthenticationPending(true);
-    // firebaseAuth.onAuthStateChanged((user)=>{
+  // componentWillMount(){
+    // // this.props.setFirebaseAuthenticationPending(true);
+    // firebaseApp.auth().onAuthStateChanged((user)=>{
     //   if (user) {
     //     console.log("User is signed in:",user.displayName);
     //     this.props.setFirebaseAuth(user);
@@ -51,13 +55,13 @@ class AppWithNavigationState extends React.Component {
     //     this.props.setFirebaseAuth(null);
     //   }
     // });
-    this.props.setFirebaseConnected(false);
-    var connectedRef = firebaseDb.ref(".info/connected");
-    connectedRef.on("value", (connected)=> {
-      console.log(".info/connected: ",connected.val());
-      this.props.setFirebaseConnected(connected.val());
-    });
-  }
+    // this.props.setFirebaseConnected(false);
+    // var connectedRef = firebaseDb.ref(".info/connected");
+    // connectedRef.on("value", (connected)=> {
+    //   console.log(".info/connected: ",connected.val());
+    //   this.props.setFirebaseConnected(connected.val());
+    // });
+  // }
   componentDidUpdate(lastProps) {
     const lastState = lastProps.nav;
     this._actionEventSubscribers.forEach(subscriber => {
@@ -85,8 +89,9 @@ class AppWithNavigationState extends React.Component {
   };
 
   render() {
-    const { dispatch, nav } = this.props;
-    return (
+    const { dispatch, nav, isRehydrated } = this.props;
+    console.log("AppNavigator isRehydrated?",isRehydrated)
+    return (isRehydrated)?(
       <AppNavigator
         navigation={addNavigationHelpers({
           dispatch,
@@ -95,6 +100,9 @@ class AppWithNavigationState extends React.Component {
         })}
         screenProps={{user:this.props.user}}
       />
+    ):(
+      
+      <Container><Content><Text>waiting for state to rehydrate...</Text></Content></Container> 
     );
   }
 }
@@ -103,6 +111,7 @@ const mapStateToProps = state => ({
   nav: state.nav,
   lastAction: state.lastAction,
   user: state.firebase.auth,
+  isRehydrated: state.rehydrated.isRehydrated,
 });
 // const mapDispatchToProps = (dispatch, ownProps) => {
 //   return {

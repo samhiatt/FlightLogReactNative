@@ -23,10 +23,19 @@ export function authReducer(state = initialAuthState, action) {
       return { ...state, isLoginPending:false, isLoggedIn:false, loginError: null};
 
     case 'SET_GOOGLE_AUTH_RESPONSE':
-      return { ...state, googleAuth: action.googleAuth, isLoginPending:action.isLoginPending };
+      return { ...state, googleAuth: action.googleAuth, isLoginPending:action.isLoginPending, isLoggedIn: true };
 
     case 'SET_DISPLAY_NAME':
       return { ...state, displayName: action.value };
+
+    case 'BEGIN_FB_LOGIN':
+      return { ...state, fbLoginPending: true, fbLoginError: null, fbAuthenticated: false };
+
+    case 'SET_FB_AUTH_ERROR':
+      return { ...state, fbAuthError: action.error, fbLoginPending:false, fbAuthenticated: false };
+
+    case 'SET_FB_AUTH':
+      return { ...state, fbAuth: action.value, fbAuthenticated: true, fbLoginError: null, fbLoginPending: false };
 
     default:
       return state;

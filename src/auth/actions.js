@@ -1,8 +1,9 @@
 import firebase from 'firebase';
-import { firebaseApp, googleLoginAsync } from '../firebase';
+import { firebaseApp, firebaseAuth } from '../firebase';
+import { getGoogleAuth } from './google';
 
 export const SET_LOGIN_PENDING = 'SET_LOGIN_PENDING';
-function setLoginPending(isLoginPending) {
+export function setLoginPending(isLoginPending) {
   return {
     type: SET_LOGIN_PENDING,
     isLoginPending
@@ -27,7 +28,7 @@ function beginLogin() {
   return { type: BEGIN_LOGIN };
 }
 export const SET_GOOGLE_AUTH_RESPONSE = 'SET_GOOGLE_AUTH_RESPONSE';
-function setGoogleAuth(googleAuth) {
+export function setGoogleAuth(googleAuth) {
   return {
     type: SET_GOOGLE_AUTH_RESPONSE,
     googleAuth
@@ -100,67 +101,141 @@ export function setFirebaseAuthenticationError(value) {
 //   }
 // }
 
-export const testSignIn = () => (dispatch, getState) => {
-  console.log("Testing sign in with ",getState());
-  return googleLoginAsync().then(result=>{
-    console.log("google login result:",result);
-  }).catch(error=>{
-    console.error("Google login error:",error);
-  });
-}
+const setFbAuth = (value) => { return { type:'SET_FB_AUTH', value }};
+const setFbAuthError = (error) => { return { type: 'SET_FB_AUTH_ERROR', error }};
+const beginFbLogin = ()=> { return { type: "BGIN_FB_LOGIN" }};
 
-export function dispatchFirebaseAuth() {
+export function dispatchSignInWithFacebook() {
   return (dispatch, getState) => {
-    console.log("Dispatching firebase auth.");
+    console.log("Dispatching Facebook sign in.", beginFbLogin());
+    const fbAppId = '1982134038705806';
+    dispatch(beginFbLogin());
+    return Expo.Facebook.logInWithReadPermissionsAsync(fbAppId).then(fbAuthResult=>{
+      console.log('FB auth result',fbAuthResult);
+      dispatch(setFbAuth(fbAuthResult));
+      // return fetch("https://graph.facebook.com/me?access_token="+fbAuthResult.token).then(response=>{
+      //   response.json().then(resp=>{
+      //     console.log("FB info",resp);
+      //   }).catch(err=>{
+      //     console.log("Error reading json response.",err);
+      //     dispatch(setFbAuthError(err));
+      //   });
+      // }).catch(err=>{
+      //   console.log("FB auth error:",err);
+      //   dispatch(setFbAuthError(err));
+      // });
+
+      // firebaseApp.auth().onAuthStateChanged((user)=>{
+      //   if (user) {
+      //     console.log("User is signed in:",user.displayName);
+      //     dispatch(setFirebaseAuthResponse(user));
+      //   } else {
+      //     console.log("No user signed in.");
+      //     dispatch(setFirebaseAuthResponse(null));
+      //   }
+      // });
+      if (fbAuthResult.type='success'){
+        const credential = firebase.auth.FacebookAuthProvider.credential(fbAuthResult.token);
+        console.log("Signing into firebase with credential",credential);
+        let signinPromise = firebaseApp.auth().signInWithCredential(credential).then(res=>{
+          console.log("Signed into firebase with facebook credential.",res);
+        }).catch(err=>{
+          console.log("Error authenticating to firebase with facebook credential.",err);
+          dispatch(setFbAuthError(err.message));
+        });
+      } else {
+        console.log("FB Login error",fbAuthResult);
+        dispatch(setFbAuthError(fbAuthResult));
+      }
+    }).catch(err=>{
+      console.error("FB auth error:",err);
+      dispatch(setFbAuthError(err));
+    });
   }
 }
+    
 
 export function dispatchSignInWithGoogle() {
   return (dispatch, getState) => {
-    // dispatch(setLoginPending(true));
-    // dispatch(setLoginSuccess(false));
-    // dispatch(setLoginError(null));
     dispatch(beginLogin());
-
-    console.log("attempting login with Google...");
-    return googleLoginAsync().catch(console.error).then(result=>{
-      console.log("google login result:",result);
+    let googleAuth = getState().auth.googleAuth;
+    getGoogleAuth(googleAuth).then(auth=>{
       dispatch(setLoginPending(false));
-      if (result && result.type === 'success') {
-        dispatch(setLoginSuccess(true));
-        dispatch(setGoogleAuth(result));
-        // Build Firebase credential with the id token.
-        const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken);
-        // Sign in with credential from the Google user.
-        // dispatch(setFirebaseAuthenticationPending(true));
-        // dispatch(setFirebaseAuthenticated(false));
-        // dispatch(setFirebaseAuthenticationError(null));
-        dispatch(beginFirebaseAuth());
-        let auth = firebaseApp.auth();
-        auth.onAuthStateChanged((user)=>{
-          if (user) {
-            console.log("User is signed in:",user.displayName);
-            dispatch(setFirebaseAuthResponse(user));
-          } else {
-            console.log("No user signed in.");
-            dispatch(setFirebaseAuthResponse(null));
-          }
-        });
-        auth.signInWithCredential(credential).then(res=>{
-          console.log("Authenticated with firebase",res);
-          dispatch(setFirebaseAuthResponse(res));
-          // dispatch(setAuthProvider(res.providerData[0].providerId));
-          // dispatch(setDisplayName(res.displayName));
-        }).catch(error => {
-          console.error("firebase auth error",error);
-          dispatch(setFirebaseAuthenticated(false));
-          dispatch(setFirebaseAuthenticationError(error));
-        })
-      } else {
-        console.log("Error authenticating with Google:",result);
-        dispatch(setLoginError('Error authenticating with Google'));
-        dispatch(setLoginPending(false));
+      if (googleAuth && googleAuth.idToken!=auth.idToken) {
+        console.log("Setting googleAuth",auth);
+        dispatch(setGoogleAuth(auth));
       }
-    })
+      const credential = firebase.auth.GoogleAuthProvider.credential(auth.idToken);
+      // dispatch(beginFirebaseAuth());
+      console.log("credential",credential);
+      // firebaseApp.auth().onAuthStateChanged((user)=>{
+      //   if (user) {
+      //     console.log("User is signed in:",user.displayName);
+      //     dispatch(setFirebaseAuthResponse(user));
+      //   } else {
+      //     console.log("No user signed in.");
+      //     dispatch(setFirebaseAuthResponse(null));
+      //   }
+      // });
+      firebaseApp.auth().signInWithCredential(credential).then(res=>{
+        console.log("Authenticated with firebase",res);
+        dispatch(setFirebaseAuthResponse(res.user));
+      });
+    }).catch(error => {
+      console.error("firebase auth error",error);
+      dispatch(setFirebaseAuthenticated(false));
+      dispatch(setFirebaseAuthenticationError(error));
+    });
+
+    // console.log("attempting login with Google...");
+    // return googleLoginAsync()
+    // .then(result=>{
+    //   console.log("google login result:",result);
+    //   dispatch(setLoginPending(false));
+    //   if (result && result.type === 'success') {
+    //     dispatch(setLoginSuccess(true));
+    //     dispatch(setGoogleAuth(result));
+    //     // Build Firebase credential with the id token.
+    //     const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken);
+    //     dispatch(beginFirebaseAuth());
+    //     firebaseApp.auth().onAuthStateChanged((user)=>{
+    //       if (user) {
+    //         console.log("User is signed in:",user.displayName);
+    //         dispatch(setFirebaseAuthResponse(user));
+    //       } else {
+    //         console.log("No user signed in.");
+    //         dispatch(setFirebaseAuthResponse(null));
+    //       }
+    //     });
+    //     firebaseApp.auth().signInWithCredential(credential).then(res=>{
+    //       console.log("Authenticated with firebase",res);
+    //       // onAuthStateChanged above dispatches setFirebaseAuthResponse. No need to set again. 
+    //       // dispatch(setFirebaseAuthResponse(res));
+    //       // dispatch(setAuthProvider(res.providerData[0].providerId));
+    //       // dispatch(setDisplayName(res.displayName));
+    //     }).catch(error => {
+    //       console.error("firebase auth error",error);
+    //       dispatch(setFirebaseAuthenticated(false));
+    //       dispatch(setFirebaseAuthenticationError(error));
+    //     })
+    //   } else {
+    //     console.log("Error authenticating with Google:",result);
+    //     dispatch(setLoginError('Error authenticating with Google'));
+    //     dispatch(setLoginPending(false));
+    //   }
+    // })
+    // .catch(console.error);
+  }
+}
+
+export function firebaseLogout() {
+  return (dispatch) => {
+    console.log("Logging out...");
+    firebaseApp.auth().signOut().then(()=>{
+      console.log("Signed out.");
+      dispatch(setFirebaseAuthResponse(null));
+    }).catch(err=>{
+      console.error(err);
+    });
   }
 }

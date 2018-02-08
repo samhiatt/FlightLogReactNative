@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // import { Button, StyleSheet, Text, View } from 'react-native';
 import { Container, Header, Content, Form, Button, Item, Input, Text, Label } from 'native-base';
-import { dispatchSignInWithGoogle, testSignIn } from '../auth/actions';
+import { dispatchSignInWithGoogle, dispatchSignInWithFacebook } from '../auth/actions';
 
 
 class LoginScreen extends React.Component {
@@ -35,6 +35,12 @@ class LoginScreen extends React.Component {
               <Text>Sign In With Google</Text>
             </Button>
 
+            <Text>...</Text>
+
+            <Button block primary onPress={this.props.signinWithFacebook} >
+              <Text>Sign In With Facebook</Text>
+            </Button>
+
             <Text>
               {isLoginPending? "Login pending...":"--"}
               {isLoggedIn? "Logged in":"Not logged in"}
@@ -57,6 +63,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   signinWithGoogle: dispatchSignInWithGoogle,
+  signinWithFacebook: dispatchSignInWithFacebook,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
