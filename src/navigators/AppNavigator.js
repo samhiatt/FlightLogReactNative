@@ -10,6 +10,7 @@ import LoginScreen from '../components/LoginScreen';
 import MainScreen from '../components/MainScreen';
 import ProfileScreen from '../components/ProfileScreen';
 import FlightsScreen from '../components/FlightsScreen';
+import NewFlightScreen from '../components/NewFlightScreen';
 
 // import { firebaseDb, firebaseApp } from '../firebase';
 import { 
@@ -26,6 +27,7 @@ export const AppNavigator = StackNavigator({
   Main: { screen: MainScreen },
   Profile: { screen: ProfileScreen },
   Flights: { screen: FlightsScreen },
+  NewFlight: { screen: NewFlightScreen },
 });
 
 class AppWithNavigationState extends React.Component {

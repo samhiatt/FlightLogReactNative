@@ -5,7 +5,7 @@ import { AppNavigator } from '../navigators/AppNavigator';
 
 import { authReducer } from '../auth/reducer';
 import { firebaseReducer } from '../firebase/reducer';
-import { flightsReducer } from '../flights';
+import { flightsReducer, newFlightReducer } from '../flights/reducer';
 
 // Start with two routes: The Main screen, with the Login screen on top.
 const firstAction = AppNavigator.router.getActionForPathAndParams('Main');
@@ -54,6 +54,7 @@ const AppReducer = combineReducers({
   auth: authReducer,
   firebase: firebaseReducer,
   flights: flightsReducer,
+  newFlight: newFlightReducer,
 });
 
 export default AppReducer;

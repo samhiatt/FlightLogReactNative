@@ -41,7 +41,7 @@ offlineConfig.persistAutoRehydrate = () => autoRehydrate({log: true});
 // }
 
 let store = createStore( AppReducer, compose( applyMiddleware(thunk
-	// , logger
+	, logger
 	), offline(offlineConfig) ) );
 
 class FlightLogReactNativeApp extends React.Component {

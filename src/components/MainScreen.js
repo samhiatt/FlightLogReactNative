@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const MainScreen = ({goToProfile, testIt, clearPendingActions, testLogin, goToFlights}) => (
+const MainScreen = ({goToProfile, testIt, clearPendingActions, testLogin, goToFlights, goToNewFlightScreen}) => (
   <View style={styles.container}>
     <LoginStatusMessage />
     <AuthButton />
@@ -30,6 +30,11 @@ const MainScreen = ({goToProfile, testIt, clearPendingActions, testLogin, goToFl
     <Button
       title='Flights'
       onPress={goToFlights}
+    />
+    <Text></Text>
+    <Button
+      title='New Flight'
+      onPress={goToNewFlightScreen}
     />
     <Text></Text>
     <Button
@@ -68,6 +73,9 @@ const mapDispatchToProps = {
   },
   goToFlights: ()=>dispatch=>{
     dispatch(NavigationActions.navigate({routeName:'Flights'}));
+  },
+  goToNewFlightScreen: ()=>dispatch=>{
+    dispatch(NavigationActions.navigate({routeName:'NewFlight'}));
   },
   testIt: ()=>(dispatch,getState)=>{
     console.log("testIt",getState())

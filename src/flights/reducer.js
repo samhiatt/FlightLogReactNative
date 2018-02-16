@@ -8,6 +8,7 @@ import {
   UPDATE_FLIGHT_SUCCESS
 } from './action-types';
 
+import moment from 'moment'; // 2.20.1
 
 export const defaultState = {
   deleted: null,
@@ -60,5 +61,43 @@ export function flightsReducer(state = defaultState, {payload, type}) {
 
     default:
       return state;
+  }
+}
+
+const timeFormat = "h:mm a";
+export function newFlightReducer(state={launch_time_iso:null,landing_time_iso:null,duration_total_minutes:null}, action){
+  switch (action.type) {
+    case 'SET_NEW_FLIGHT_LAUNCH_NAME':
+      return { ...state, 
+        launch_name:action.launch_name, 
+      };
+    case 'SET_NEW_FLIGHT_START_TIME':
+      return { ...state, 
+        launch_time_iso:action.launch_time_iso,
+        duration_total_minutes:(state.landing_time_iso)? 
+          moment(state.landing_time_iso).diff(moment(action.launch_time_iso),'minutes').toString()
+          :state.duration_total_minutes, 
+      };
+    case 'SET_NEW_FLIGHT_DATE':
+      return { ...state, 
+        date:action.date, 
+      };
+    case 'SET_NEW_FLIGHT_END_TIME': 
+      return { ...state, 
+        landing_time_iso: action.landing_time_iso,
+        duration_total_minutes: (state.launch_time_iso)?
+          moment(action.landing_time_iso).diff(moment(state.launch_time_iso),'minutes').toString()
+          :state.launch_time_iso, 
+      }
+    case 'SET_NEW_FLIGHT_DURATION':
+      var duration_total_minutes = parseInt(action.duration_total_minutes);
+      return {...state, 
+        duration_total_minutes: action.duration_total_minutes,
+        landing_time_iso: (state.launch_time_iso)? 
+          moment(state.launch_time_iso).add(duration_total_minutes,'minutes').toISOString()
+          :state.launch_time_iso,
+      };
+    default:
+      return state
   }
 }

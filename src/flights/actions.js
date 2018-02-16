@@ -123,3 +123,42 @@ export function unloadFlights() {
     type: UNLOAD_FLIGHTS_SUCCESS
   };
 }
+
+
+
+export function setDate(date) {
+  return { type: 'SET_NEW_FLIGHT_DATE', date };
+}
+export function setStartTime(launch_time_iso) {
+  return { type: 'SET_NEW_FLIGHT_START_TIME', launch_time_iso };
+}
+export function setEndTime(landing_time_iso) {
+  return { type: 'SET_NEW_FLIGHT_END_TIME', landing_time_iso };
+}
+export function setDuration(duration_total_minutes) {
+  // let errors = [];
+  //   mins=null,
+  //   hours=0;
+  // if (duration){
+  //   try{
+  //     let parts = duration.split(':');
+  //     mins = parseInt(parts[0]);
+  //     if (parts.length==2) {
+  //       hours = mins;
+  //       mins = parseInt(parts[1]);
+  //     }
+  //     if (parts.length>2) errors.append("Expected format HH:MM")
+  //     if (mins<0) errors.append("Minutes should be a positive number.");
+  //     if (hours<0) errors.append("Hours should be a positive number.");
+  //     console.log("Setting duration ",hours+":"+mins);
+  //     if (errors.length==0) return { type: 'SET_DURATION', duration:hours+":"+('00'+mins).slice(-2) }
+  //   } catch(err){
+  //     errors.append("Expected format HH:MM");
+  //   }
+  // }
+  
+  return { type: 'SET_NEW_FLIGHT_DURATION', duration_total_minutes };
+}
+export function setLaunchName(launch_name){
+  return { type:'SET_NEW_FLIGHT_LAUNCH_NAME', launch_name };
+}
