@@ -87,7 +87,6 @@ class AppWithNavigationState extends React.Component {
     dispatch(NavigationActions.back());
     return true;
   };
-
   render() {
     const { dispatch, nav, isRehydrated } = this.props;
     return (isRehydrated)?(
@@ -100,8 +99,9 @@ class AppWithNavigationState extends React.Component {
         screenProps={{user:this.props.user}}
       />
     ):(
-      
-      <Container><Content><Text>waiting for state to rehydrate...</Text></Content></Container> 
+      <Container><Content style={{marginTop:30}}>
+        <Text>Waiting for state to rehydrate...</Text>
+      </Content></Container> 
     );
   }
 }
@@ -112,18 +112,6 @@ const mapStateToProps = state => ({
   user: state.firebase.auth,
   isRehydrated: state.rehydrated.isRehydrated,
 });
-// const mapDispatchToProps = (dispatch, ownProps) => {
-//   return {
-//     setFirebaseAuth: (user) => {
-//       dispatch(setFirebaseAuth(user));
-//       dispatch(setFirebaseAuthenticated(true));
-//     },
-//     firebaseConnected: (isConnected)=>{
-//       dispatch(setFirebaseConnected(isConnected));
-//     },
-
-//   }
-// }
 const mapDispatchToProps = {
   setFirebaseAuth: user => dispatch=> {
     dispatch(setFirebaseAuthResponse(user));

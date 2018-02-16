@@ -25,6 +25,7 @@ const formatDate = (date) => date? new Date(date).toLocaleString() : '';
 
 class FlightItem extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
+    // TODO: Add check for updated value
     return (nextProps.flight!=this.props.flight);
   }
   render(){

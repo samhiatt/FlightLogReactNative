@@ -10,27 +10,11 @@ import offlineConfig from '@redux-offline/redux-offline/lib/defaults';
 import Expo from 'expo';
 import AppReducer from './src/reducers';
 import AppWithNavigationState from './src/navigators/AppNavigator';
-// import { firebaseDb, firebaseApp } from './src/firebase';
 import firebaseConfig from './src/firebase/firebase-config';
-// import firebase from 'firebase/app';
-// import 'firebase/auth';
-// import 'firebase/database';
 import { firebaseApp, firebaseAuth, firebaseDb } from './src/firebase';
 import { setFirebaseConnected } from './src/auth/actions';
 
 import { setLoginPending, setFirebaseAuthResponse } from './src/auth/actions';
-
-// GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest
-// global._fetch = fetch;
-// global.fetch = function(uri, options, ...args) {
-//   return global._fetch(uri, options, ...args).then((response) => {
-//     console.log('Fetch', { request: { uri, options, ...args }, response });
-//     return response;
-//   });
-// };
-
-
-// let firebaseApp = firebase.initializeApp(firebaseConfig);
 
 offlineConfig.effect=(effect,action)=>{
 	return new Promise((resolve,reject)=>{
@@ -57,7 +41,7 @@ offlineConfig.persistAutoRehydrate = () => autoRehydrate({log: true});
 // }
 
 let store = createStore( AppReducer, compose( applyMiddleware(thunk
-	, logger
+	// , logger
 	), offline(offlineConfig) ) );
 
 class FlightLogReactNativeApp extends React.Component {
@@ -67,48 +51,44 @@ class FlightLogReactNativeApp extends React.Component {
 	}
 	componentWillMount() {
 		console.log("Mounting FlightLogReactNativeApp...");
-    // store.dispatch(setFirebaseConnected(false));
-    var connectedRef = firebaseDb.ref(".info/connected");
-    connectedRef.on("value", (connected)=> {
-      console.log(".info/connected: ",connected.val());
-      store.dispatch(setFirebaseConnected(connected.val()));
-    });
+		// store.dispatch(setFirebaseConnected(false));
+		var connectedRef = firebaseDb.ref(".info/connected");
+		connectedRef.on("value", (connected)=> {
+			console.log(".info/connected: ",connected.val());
+			store.dispatch(setFirebaseConnected(connected.val()));
+		});
 		firebaseApp.auth().onAuthStateChanged((user)=>{
-		  if (user) {
-		    console.log("User is signed in:",user);
-		    store.dispatch(setFirebaseAuthResponse(user));
-		    // firebaseDb.ref(user.uid+'/flights').limitToLast(3).on('value',(flights)=>{
-
-		    // })
-		  } else {
-		    console.log("No user signed in.");
-		    store.dispatch(setFirebaseAuthResponse(null));
-		  }
+			if (user) {
+				console.log("User is signed in:",user);
+				store.dispatch(setFirebaseAuthResponse(user));
+			} else {
+				console.log("No user signed in.");
+				store.dispatch(setFirebaseAuthResponse(null));
+			}
 		});
 	}
 	async componentDidMount() {
 	  await Expo.Font.loadAsync({
-	    'Roboto': require('native-base/Fonts/Roboto.ttf'),
-	    'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-	  });
-	  this.setState({ fontLoaded: true });
+			'Roboto': require('native-base/Fonts/Roboto.ttf'),
+			'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+		});
+		this.setState({ fontLoaded: true });
 	}
-  componentDidCatch(error, info) {
-    // Display fallback UI
-    console.log("ERROR:",error);
-  }
-  render() {
-  	if (!this.state.fontLoaded) {
-  		console.log("App loading...");
-  		return (<Expo.AppLoading />);
-  	}
-  	console.log("Rendering App...");
-    return (
-      <Provider store={store}>
-        <AppWithNavigationState />
-      </Provider>
-    );
-  }
+	componentDidCatch(error, info) {
+		// Display fallback UI
+		console.log("ERROR:",error);
+	}
+	render() {
+		if (!this.state.fontLoaded) {
+			console.log("App loading...");
+			return (<Expo.AppLoading />);
+		}
+		return (
+			<Provider store={store}>
+			  <AppWithNavigationState />
+			</Provider>
+		);
+	}
 }
 
 AppRegistry.registerComponent('FlightLogReactNative', () => FlightLogReactNativeApp);

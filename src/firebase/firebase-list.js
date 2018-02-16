@@ -54,7 +54,7 @@ export class FirebaseList {
 
     ref.once('value', () => {
       initialized = true;
-      emit(this._actions.onLoad(list));
+      emit(this._actions.onLoad(list.reverse()));
     });
 
     ref.on('child_added', snapshot => {
