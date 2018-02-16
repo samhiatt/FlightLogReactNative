@@ -90,7 +90,6 @@ class AppWithNavigationState extends React.Component {
 
   render() {
     const { dispatch, nav, isRehydrated } = this.props;
-    console.log("AppNavigator isRehydrated?",isRehydrated)
     return (isRehydrated)?(
       <AppNavigator
         navigation={addNavigationHelpers({

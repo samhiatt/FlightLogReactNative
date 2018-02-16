@@ -60,7 +60,7 @@ export function undeleteFlight() {
   return (dispatch, getState) => {
     const flight = getState().flights.deleted;
     if (flight) {
-      flightList.set(flight.key, {completed: flight.completed, title: flight.title})
+      flightList.set(flight.key, flight)
         .catch(error => dispatch(undeleteFlightError(error)));
     }
   };
@@ -111,9 +111,8 @@ export function filterFlights(filterType) {
 export function loadFlights() {
   return (dispatch, getState) => {
     const { auth } = getState().firebase;
-    console.log("Loading flights for user",auth.uid);
+    console.log(`Loading ${auth.uid}/flights`);
     flightList.path = `${auth.uid}/flights`;
-    console.log("Subscribing to",flightList.path);
     flightList.subscribe(dispatch);
   };
 }

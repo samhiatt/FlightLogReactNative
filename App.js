@@ -73,13 +73,13 @@ class FlightLogReactNativeApp extends React.Component {
       console.log(".info/connected: ",connected.val());
       store.dispatch(setFirebaseConnected(connected.val()));
     });
-		firebaseAuth.onAuthStateChanged((user)=>{
+		firebaseApp.auth().onAuthStateChanged((user)=>{
 		  if (user) {
 		    console.log("User is signed in:",user);
 		    store.dispatch(setFirebaseAuthResponse(user));
-		    firebaseDb.ref(user.uid+'/flights').limitToLast(3).on('value',(flights)=>{
+		    // firebaseDb.ref(user.uid+'/flights').limitToLast(3).on('value',(flights)=>{
 
-		    })
+		    // })
 		  } else {
 		    console.log("No user signed in.");
 		    store.dispatch(setFirebaseAuthResponse(null));
@@ -93,11 +93,16 @@ class FlightLogReactNativeApp extends React.Component {
 	  });
 	  this.setState({ fontLoaded: true });
 	}
+  componentDidCatch(error, info) {
+    // Display fallback UI
+    console.log("ERROR:",error);
+  }
   render() {
-  	console.log("Rendering FlightLogReactNativeApp",store.getState())
   	if (!this.state.fontLoaded) {
+  		console.log("App loading...");
   		return (<Expo.AppLoading />);
   	}
+  	console.log("Rendering App...");
     return (
       <Provider store={store}>
         <AppWithNavigationState />

@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
+import { Record } from 'immutable';
 import { NavigationActions } from 'react-navigation';
 
 import { AppNavigator } from '../navigators/AppNavigator';
 
 import { authReducer } from '../auth/reducer';
 import { firebaseReducer } from '../firebase/reducer';
+import { flightsReducer } from '../flights';
 
 // Start with two routes: The Main screen, with the Login screen on top.
 const firstAction = AppNavigator.router.getActionForPathAndParams('Main');
@@ -32,7 +34,7 @@ function nav(state = initialNavState, action) {
   }
 }
 
-function lastAction(state = null, action) {
+function lastAction(state = {lastAction:null}, action) {
   return action;
 }
 
@@ -40,6 +42,7 @@ function rehydrated(state={isRehydrated:false}, action){
   switch (action.type){
     case 'STATE_RESTORED':
       return { ...state, isRehydrated:true };
+      // return state.merge({isRehydrated:true})
     default: 
       return state;
   }
@@ -51,6 +54,7 @@ const AppReducer = combineReducers({
   nav,
   auth: authReducer,
   firebase: firebaseReducer,
+  flights: flightsReducer,
 });
 
 export default AppReducer;

@@ -161,10 +161,10 @@ export function dispatchSignInWithGoogle() {
     let googleAuth = getState().auth.googleAuth;
     getGoogleAuth(googleAuth).then(auth=>{
       dispatch(setLoginPending(false));
-      if (googleAuth && googleAuth.idToken!=auth.idToken) {
+      // if (googleAuth && googleAuth.idToken!=auth.idToken) {
         console.log("Setting googleAuth",auth);
         dispatch(setGoogleAuth(auth));
-      }
+      // }
       const credential = firebase.auth.GoogleAuthProvider.credential(auth.idToken);
       // dispatch(beginFirebaseAuth());
       console.log("credential",credential);
