@@ -1,14 +1,13 @@
-import { Record } from 'immutable';
 
-
-export const Flight = new Record({
+export const Flight = {
 	id: null,
 	flight: null,
 	date: false,
-	start_time: null,
-	end_time: null,
-	duration_hours: null,
-	duration_minutes: null,
+	launch_time_iso: null,
+	launch_time_epoch: null,
+	landing_time_iso: null,
+	landing_time_epoch: null,
+	duration_total_minutes: null,
 	comments: null,
 	// key:null,
 	altitude_gain: null,
@@ -25,4 +24,5 @@ export const Flight = new Record({
 	wind_speed: null,
 	wing_name: null,
 	xc_miles: null,
-});
+	updated_epoch: null,
+};

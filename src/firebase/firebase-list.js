@@ -6,9 +6,8 @@ import { firebaseApp } from './firebase';
 let firebaseDb = firebaseApp.database();
 
 export class FirebaseList {
-  constructor(actions, modelClass, path = null) {
+  constructor(actions, path = null) {
     this._actions = actions;
-    this._modelClass = modelClass;
     this._path = path;
   }
 
@@ -85,6 +84,7 @@ export class FirebaseList {
   unwrapSnapshot(snapshot) {
     let attrs = snapshot.val();
     attrs.key = snapshot.key;
-    return new this._modelClass(attrs);
+    // return new this._modelClass(attrs);
+    return attrs;
   }
 }

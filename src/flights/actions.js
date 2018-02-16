@@ -111,8 +111,8 @@ export function filterFlights(filterType) {
 export function loadFlights() {
   return (dispatch, getState) => {
     const { auth } = getState().firebase;
-    console.log(`Loading ${auth.uid}/flights`);
-    flightList.path = `${auth.uid}/flights`;
+    console.log(`Loading ${auth.uid}/flight_log`);
+    flightList.path = `${auth.uid}/flight_log`;
     flightList.subscribe(dispatch);
   };
 }

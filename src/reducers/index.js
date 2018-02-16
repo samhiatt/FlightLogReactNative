@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { Record } from 'immutable';
 import { NavigationActions } from 'react-navigation';
 
 import { AppNavigator } from '../navigators/AppNavigator';

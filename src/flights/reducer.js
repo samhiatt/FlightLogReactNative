@@ -1,4 +1,3 @@
-import { List, Record } from 'immutable';
 // import { SIGN_OUT_SUCCESS } from 'src/auth/action-types';
 const SIGN_OUT_SUCCESS = 'SIGN_OUT_SUCCESS';
 import {
@@ -10,53 +9,54 @@ import {
 } from './action-types';
 
 
-export const FlightState = new Record({
+export const defaultState = {
   deleted: null,
   filter: '',
-  list: new List(),
+  list: [],
   previous: null
-});
+};
 
-
-export function flightsReducer(state = new FlightState(), {payload, type}) {
-  if (typeof state=='object') state = new FlightState(state);
+export function flightsReducer(state = defaultState, {payload, type}) {
+  // if (typeof state=='object') state = new FlightState(state);
   switch (type) {
     case CREATE_FLIGHT_SUCCESS:
-      return state.merge({
+      if (state.deleted && state.deleted.key === payload.key) state.list = state.previous;
+      else state.list.unshift(payload);
+      return { ...state, 
         deleted: null,
         previous: null,
-        list: state.deleted && state.deleted.key === payload.key ?
-              state.previous :
-              state.list.unshift(payload)
-      });
+      };
 
     case REMOVE_FLIGHT_SUCCESS:
-      return state.merge({
+      return { ...state,
         deleted: payload,
         previous: state.list,
         list: state.list.filter(task => task.key !== payload.key)
-      });
+      };
 
     case FILTER_FLIGHTS:
-      return state.set('filter', payload.filterType || '');
+      // return state.set('filter', payload.filterType || '');
+      return { ...state, filter: payload.filterType || '' };
 
     case LOAD_FLIGHTS_SUCCESS:
       console.log("LOAD_FLIGHTS_SUCCESS, state is",state)
-      return state.set('list', new List(payload).reverse() );
+      // return state.set('list', new List(payload).reverse() );
       // return state.set('list', payload)
       // return { ...state, list: new List(payload).reverse() };
+      return { ...state, list: payload };
 
     case UPDATE_FLIGHT_SUCCESS:
-      return state.merge({
+      return { ...state,
         deleted: null,
         previous: null,
         list: state.list.map(task => {
           return task.key === payload.key ? payload : task;
         })
-      });
+      };
 
     case SIGN_OUT_SUCCESS:
-      return new FlightState();
+    case 'Logout':
+      return { ...state, defaultState };
 
     default:
       return state;

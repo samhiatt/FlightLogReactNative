@@ -43,7 +43,7 @@ const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn || state.firebase.isAuthenticated,
   isFirebaseAuthenticated: state.firebase.isAuthenticated, 
   displayName: (state.firebase.auth)? state.firebase.auth.displayName : "",
-  authProvider: (state.firebase.auth)? state.firebase.auth.providerData[0].providerId : '',
+  authProvider: (state.firebase.auth)? state.firebase.auth.providerId : '',
 });
 
 export default connect(mapStateToProps)(ProfileScreen);

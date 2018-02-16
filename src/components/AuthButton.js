@@ -32,6 +32,7 @@ const mapStateToProps = state => ({
 //   },
 // });
 const mapDispatchToProps = {
+  // logout: ()=> dispatch=> dispatch({type:'Logout'}),
   logout: firebaseLogout,
   loginScreen: ()=>dispatch=>{dispatch(NavigationActions.navigate({ routeName: 'Login' }))},
 };

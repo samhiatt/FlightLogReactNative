@@ -19,14 +19,19 @@ const styles = StyleSheet.create({
   },
 });
 
+const formatDuration = (total_minutes) => Math.floor(total_minutes/60)+':'+total_minutes%60;
+
+const formatDate = (date) => date? new Date(date).toLocaleString() : '';
+
 class FlightItem extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return (nextProps.flight!=this.props.flight);
   }
   render(){
-    const {comments, date, flight, start_time, end_time, duration_hours, duration_minutes, 
-         altitude_gain, landing_altitude, landing_zone, launch_altitude, launch_name, launch_orientation, 
-         max_altitude, site_name, total_airtime, vertical_drop, wind_direction, wind_speed, wing_name, xc_miles 
+    const {comments, date, flight, launch_time_epoch, launch_time_iso, landing_time_epoch, landing_time_iso, 
+      duration_total_minutes, altitude_gain, landing_altitude, landing_zone, launch_altitude, launch_name, 
+      launch_orientation, max_altitude, site_name, total_airtime, vertical_drop, wind_direction, wind_speed, 
+      wing_name, xc_miles 
     } = this.props;
     return (
       <View style={{ height: 59, width: '100%'}}>
@@ -36,15 +41,19 @@ class FlightItem extends React.Component {
             <Text>{date}</Text>
           </View>
           <View style={{flex: 1, alignItems: 'center', flexDirection: 'column' }}>
-            <Text>{start_time}</Text>
-            <Text>{end_time}</Text>
+            <Text>{formatDate(launch_time_iso)}</Text>
+            <Text>{formatDate(landing_time_iso)}</Text>
+          </View>
+          <View style={{flex: 1, alignItems: 'center', flexDirection: 'column' }}>
+            <Text>{formatDuration(duration_total_minutes)}</Text>
+            <Text>{total_airtime} hrs total</Text>
           </View>
         </View>
         <View style={{flexDirection:'row', width: '100%'}}>
           <Text style={{flex: 1, flexWrap: 'wrap'}}>{comments}</Text>
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -55,7 +64,7 @@ class FlightsList extends React.Component {
     const { flights } = this.props;
     if (false) return (
       <ScrollView>
-      {(flights).map((item,key)=><FlightItem key={key} flight={item.flight} date={item.date} comments={item.comments}/>)}
+      {(flights).map((item,key)=><FlightItem key={key} {...item}/>)}
       </ScrollView>
     )
     return (
@@ -67,12 +76,11 @@ class FlightsList extends React.Component {
           <View style={{ height: 1, width: "73%", backgroundColor: "#CED0CE", marginLeft: "14%"}}/>
         )}}
         ListHeaderComponent={()=>{return(
-          <View><Text>{flights.length||flights.size} flights</Text></View>
+          <View><Text>{flights.length} flights</Text></View>
         )}}
-        /*maxToRenderPerBatch={20}*/
         initialNumToRender={30}
         keyExtractor = {(item,index)=>index.toString()}
-        getItemCount={(data)=>data.length||data.size}
+        getItemCount={(data)=>data.length}
         getItem={(data,index)=>{
           if (typeof data.get=='function') {
             return data.get(index)
