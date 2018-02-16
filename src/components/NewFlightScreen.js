@@ -137,11 +137,34 @@ const mapStateToProps = (state)=>{
   return {
     // sites:state.sites,
     sites, // use stub
+  id: null,
+  flight: null,
     date:state.newFlight.date,
     launch_name:state.newFlight.launch_name,
     launch_time_iso:state.newFlight.launch_time_iso,
+  launch_time_epoch: null,
     landing_time_iso:state.newFlight.landing_time_iso,
+  landing_time_epoch: null,
     duration_total_minutes:state.newFlight.duration_total_minutes,
+
+  site_name: null,
+  wing_name: null,
+  launch_altitude: null,
+  launch_orientation: null,
+  wind_speed: null,
+  wind_direction: null,
+  max_altitude: null,
+  landing_zone: null,
+  landing_altitude: null,
+  xc_miles: null,
+  comments: null,
+  
+  // derived:
+  altitude_gain: null,
+  total_airtime: null,
+  vertical_drop: null,
+  updated_epoch: null,
+
     validationErrors:state.newFlight.validationErrors,
 
     isLoggedIn: state.auth.isLoggedIn || state.firebase.isAuthenticated,
