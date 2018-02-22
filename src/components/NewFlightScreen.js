@@ -142,9 +142,6 @@ const mapStateToProps = (state)=>{
     date:state.newFlight.date,
     launch_name:state.newFlight.launch_name,
     launch_time_iso:state.newFlight.launch_time_iso,
-  launch_time_epoch: null,
-    landing_time_iso:state.newFlight.landing_time_iso,
-  landing_time_epoch: null,
     duration_total_minutes:state.newFlight.duration_total_minutes,
 
   site_name: null,
@@ -158,8 +155,11 @@ const mapStateToProps = (state)=>{
   landing_altitude: null,
   xc_miles: null,
   comments: null,
-  
+
   // derived:
+  landing_time_iso:state.newFlight.landing_time_iso,
+  launch_time_epoch: null,
+  landing_time_epoch: null,
   altitude_gain: null,
   total_airtime: null,
   vertical_drop: null,
