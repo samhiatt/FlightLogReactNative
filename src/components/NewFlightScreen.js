@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'; // 5.0.6
 import { Text, StyleSheet, ScrollView, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Button } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import DatePicker from 'react-native-datepicker'; // 1.6.0
 import { FormLabel, FormInput } from 'react-native-elements'; // 0.19.0
 import Autocomplete from 'react-native-autocomplete-input'; // 3.5.0
@@ -67,7 +66,7 @@ class NewFlightScreen extends Component {
   render() {
     return (
       <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={80}>  
-      <KeyboardAwareScrollView enableAutomaticScroll contentContainerStyle={styles.container} >
+      <ScrollView contentContainerStyle={styles.container} >
       <View style={{flex:1}}>
         <Text style={styles.header}>
           New Flight
@@ -242,7 +241,7 @@ class NewFlightScreen extends Component {
           onPress={this.props.submitNewFlight.bind(this)}
         />
       </View>
-      </KeyboardAwareScrollView>
+      </ScrollView>
       </KeyboardAvoidingView>
     );
   }
