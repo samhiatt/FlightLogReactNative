@@ -157,8 +157,44 @@ export function setDuration(duration_total_minutes) {
   //   }
   // }
   
-  return { type: 'SET_NEW_FLIGHT_DURATION', duration_total_minutes };
+  return { type: 'SET_NEW_FLIGHT_DURATION', duration_total_minutes:parseInt(duration_total_minutes) };
+}
+export function setSiteName(site_name){
+  return { type:'SET_NEW_FLIGHT_SITE_NAME', site_name };
 }
 export function setLaunchName(launch_name){
   return { type:'SET_NEW_FLIGHT_LAUNCH_NAME', launch_name };
+}
+export function setLandingLocation(landing_location){
+  return { type:'SET_NEW_FLIGHT_LANDING_LOCATION', landing_location };
+}
+export function setComments(comments){
+  return { type:'SET_NEW_FLIGHT_COMMENTS', comments };
+}
+export function setWingName(wing_name){
+  return { type:'SET_NEW_FLIGHT_WING_NAME', wing_name };
+}
+export function setLaunchAltitude(launch_altitude){
+  return { type:'SET_NEW_FLIGHT_LAUNCH_ALTITUDE', launch_altitude:parseInt(launch_altitude) };
+}
+export function setLaunchOrientation(launch_orientation){
+  return { type:'SET_NEW_FLIGHT_LAUNCH_ORIENTATION', launch_orientation };
+}
+export function setWindSpeed(wind_speed){
+  return { type:'SET_NEW_FLIGHT_WIND_SPEED', wind_speed };
+}
+export function setWindDirection(wind_direction){
+  return { type:'SET_NEW_FLIGHT_WIND_DIRECTION', wind_direction };
+}
+export function setMaxAltitude(max_altitude){
+  return { type:'SET_NEW_FLIGHT_MAX_ALTITUDE', max_altitude:parseInt(max_altitude) };
+}
+export function setLandingAltitude(landing_altitude){
+  return { type:'SET_NEW_FLIGHT_LANDING_ALTITUDE', landing_altitude:parseInt(landing_altitude) };
+}
+export function setXcMiles(xc_miles){
+  return { type:'SET_NEW_FLIGHT_XC_MILES', xc_miles:parseFloat(xc_miles) };
+}
+export function submitNewFlight(){
+  return { type:'SUBMIT_NEW_FLIGHT' };
 }

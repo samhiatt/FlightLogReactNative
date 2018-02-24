@@ -65,11 +65,56 @@ export function flightsReducer(state = defaultState, {payload, type}) {
 }
 
 const timeFormat = "h:mm a";
-export function newFlightReducer(state={launch_time_iso:null,landing_time_iso:null,duration_total_minutes:null}, action){
+export function newFlightReducer(state={
+  date:null,
+  launch_time_iso:null,
+  duration_total_minutes:null,
+  launch_name:null,
+  site_name: null,
+  landing_location: null,
+
+  comments: null,
+  wing_name: null, 
+  launch_altitude: null,
+  launch_orientation: null,
+  wind_speed: null,
+  wind_direction: null,
+  max_altitude: null,
+  landing_altitude: null,
+  xc_miles: null,
+
+  // derived: 
+  // TODO: set derrived values in reducer below
+  id: null,
+  flight: null,
+  landing_time_iso:null,
+  altitude_gain: null,
+  total_airtime: null,
+  vertical_drop: null,
+  updated_epoch: null,
+
+  validationErrors:[],
+}, action){
   switch (action.type) {
+    case 'SET_NEW_FLIGHT_SITE_NAME':
+      return { ...state, 
+        site_name:action.site_name, 
+      };
     case 'SET_NEW_FLIGHT_LAUNCH_NAME':
       return { ...state, 
         launch_name:action.launch_name, 
+      };
+    case 'SET_NEW_FLIGHT_LANDING_LOCATION':
+      return { ...state, 
+        landing_location:action.landing_location, 
+      };
+    case 'SET_NEW_FLIGHT_WING_NAME':
+      return { ...state, 
+        wing_name:action.wing_name, 
+      };
+    case 'SET_NEW_FLIGHT_COMMENTS':
+      return { ...state, 
+        comments:action.comments, 
       };
     case 'SET_NEW_FLIGHT_START_TIME':
       return { ...state, 
@@ -97,6 +142,45 @@ export function newFlightReducer(state={launch_time_iso:null,landing_time_iso:nu
           moment(state.launch_time_iso).add(duration_total_minutes,'minutes').toISOString()
           :state.launch_time_iso,
       };
+    case 'SET_NEW_FLIGHT_LAUNCH_ALTITUDE':
+      return { ...state, 
+        launch_altitude:action.launch_altitude, 
+        vertical_drop: (state.landing_altitude!=null)? (action.launch_altitude - state.landing_altitude) : state.vertical_drop, 
+        altitude_gain: (state.max_altitude!=null)? (state.max_altitude - action.launch_altitude) : state.altitude_gain,
+      };
+    case 'SET_NEW_FLIGHT_LAUNCH_ORIENTATION':
+      return { ...state, 
+        launch_orientation:action.launch_orientation, 
+      };
+    case 'SET_NEW_FLIGHT_MAX_ALTITUDE':
+      return { ...state, 
+        max_altitude:action.max_altitude, 
+        altitude_gain: (state.launch_altitude!=null)? (action.max_altitude - state.launch_altitude):state.altitude_gain,
+      };
+    case 'SET_NEW_FLIGHT_LANDING_ALTITUDE':
+      return { ...state, 
+        landing_altitude:action.landing_altitude, 
+        vertical_drop: (state.launch_altitude!=null)? (state.launch_altitude - action.landing_altitude):state.vertical_drop,
+      };
+    case 'SET_NEW_FLIGHT_WIND_SPEED':
+      return { ...state, 
+        wind_speed:action.wind_speed, 
+      };
+    case 'SET_NEW_FLIGHT_WIND_DIRECTION':
+      return { ...state, 
+        wind_direction:action.wind_direction, 
+      };
+    case 'SET_NEW_FLIGHT_XC_MILES':
+      return { ...state, 
+        xc_miles:action.xc_miles, 
+      };
+    case 'SUBMIT_NEW_FLIGHT':
+      let newState = { ...state, 
+        updated_epoch: new Date().getTime(), // TODO: set this server-side?
+      }
+      console.log("SUBMIT_NEW_FLIGHT reducer has state", newState);
+      console.log("SUBMIT_NEW_FLIGHT NOT YET IMPLEMENTED");
+      return newState;
     default:
       return state
   }

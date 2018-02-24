@@ -1,4 +1,4 @@
-flight,date,start_time,end_time,wing_name,site_name,launch_name,launch_altitude,launch_orientation,landing_zone,landing_altitude,vertical_drop,wind_speed,wind_direction,duration_hours,duration_minutes,total_airtime,max_altitude,altitude_gain,xc_miles,"comments",,,
+flight,date,start_time,end_time,wing_name,site_name,launch_name,launch_altitude,launch_orientation,landing_location,landing_altitude,vertical_drop,wind_speed,wind_direction,duration_hours,duration_minutes,total_airtime,max_altitude,altitude_gain,xc_miles,"comments",,,
 1,4/1/07,,,,The Point,,,,,,0,,,,,0.00,,,,Training Flights with Santacroce,,,
 2,4/1/07,,,,The Point,,,,,,0,,,,,0.00,,,,Training Flights with Santacroce,,,
 3,4/1/07,,,,The Point,,,,,,0,,,,,0.00,,,,Training Flights with Santacroce,,,

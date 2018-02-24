@@ -9,6 +9,8 @@ const formatDuration = (total_minutes) => Math.floor(total_minutes/60)+':'+zeroP
 const formatDate = (date) => date? moment(date).format('MM/DD/YY') : '';
 const formatTime = (date) => date? moment(date).format('h:mma') : '';
 
+const formatHours = (hoursFloat)=>Math.floor(hoursFloat)+':'+zeroPad(Math.floor((hoursFloat*60)%60));
+
 // const getLandingTime = (launchTime, durationMinutes) => moment(launchTime).add(durationMinutes,'minutes').format('h:mm a');
 
 export const ITEM_HEIGHT=80;
@@ -22,11 +24,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     padding: 7,
     margin: 1,
-  },
-  flightNumber: {
-    fontWeight: 'bold',
-    // alignSelf: 'center',
-    paddingRight: 3,
   },
   dataColumn:{
     flex: 1, 
@@ -47,51 +44,63 @@ const styles = StyleSheet.create({
 
 export default class FlightListItem extends React.Component {
   shouldComponentUpdate(nextProps/*, nextState*/) {
-    // TODO: Add check for updated value
-    return (nextProps.flight!=this.props.flight);
+    return (nextProps.updated_epoch>this.props.updated_epoch);
   }
   static propTypes = {
-    flight: PropTypes.object.isRequired,
+    flight: PropTypes.number.isRequired,
+    date: PropTypes.string.isRequired,
+    duration_total_minutes: PropTypes.number.isRequired,
   };
   render(){
-    const {comments, date, flight, /*launch_time_epoch,*/ launch_time_iso, /*landing_time_epoch,*/ landing_time_iso, 
-      duration_total_minutes, altitude_gain, landing_altitude, landing_zone, launch_altitude, launch_name, 
+    const {comments, date, flight, launch_time_iso, landing_time_iso, 
+      duration_total_minutes, altitude_gain, landing_altitude, landing_location, launch_altitude, launch_name, 
       launch_orientation, max_altitude, site_name, total_airtime, vertical_drop, wind_direction, wind_speed, 
       wing_name, xc_miles 
-    } = this.props.flight;
+    } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.dataRow}>
-          <Text style={styles.flightNumber}>{flight}</Text>
-          <View style={{...styles.dataColumn, flex:2}}>
-            <Text>{formatDate(date)}</Text>
+        
+          <View style={styles.dataColumn}>
+            <View style={{flexDirection:'row'}}>
+              <Text style={{fontSize:16, textAlignVertical:'top'}}>{flight}</Text>
+              <Text style={{textAlign:'right', flex:1, textAlignVertical:'center', paddingRight:7}}>{formatDate(date)}</Text>
+            </View>
             <Text>{formatTime(launch_time_iso)}-{formatTime(landing_time_iso)}</Text>
+            <View style={{flexDirection:'row'}}>
+              <Text style={{fontSize:16}}>
+              +{formatDuration(duration_total_minutes)}
+              </Text>
+              <Text style={{textAlign:'right', textAlignVertical:'center', flex:1, paddingRight: 7}}>
+                = {formatHours(total_airtime)}
+              </Text>
+            </View>
             <Text>{wind_speed? wind_speed+' mph':''}{wind_direction? ' '+wind_direction:''}</Text>
+          </View>
+          
+          <View style={styles.dataColumn}>
+            <Text>{site_name}</Text>
+            <Text>{launch_name} to {landing_location}</Text>
             <Text>{wing_name}</Text>
           </View>
-          <View style={{...styles.dataColumn, flex:2}}>
-            <Text>{site_name}</Text>
-            <Text>{launch_name} to {landing_zone}</Text>
-            <Text>{launch_altitude? launch_altitude+"'":''} {launch_orientation}</Text>
-          </View>
+          
           <View style={styles.dataColumn}>
+            <Text>{launch_altitude? launch_altitude+"'":''} {launch_orientation}</Text>
             <Text>{max_altitude? `${max_altitude}\' max` : ''}</Text>
             <Text>{altitude_gain? `${altitude_gain}\' above launch`:''}</Text>
             <Text>{vertical_drop? `${vertical_drop}\' vertical drop`:''}</Text>
           </View>
+          
           <View style={styles.dataColumn}>
             <Text>{landing_altitude? landing_altitude+"'":''}</Text>
-            <Text>{xc_miles? xc_miles+' mi.' : ''}</Text>
+            <Text>{xc_miles? xc_miles+' mi' : ''}</Text>
           </View>
-          <View style={styles.dataColumn}>
-            <Text>{formatDuration(duration_total_minutes)}</Text>
-            <Text>{total_airtime} hrs total</Text>
-          </View>
-        </View>/* end dataRow*/
+          
+        </View>
         <View style={styles.comments}>
           <Text>{comments}</Text>
         </View>
-      </View>/*end container view*/
+      </View>
     );
   }
 }
