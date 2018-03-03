@@ -378,6 +378,7 @@ const mapDispatchToProps =  {
       const newFlight = { ...state.newFlight, 
         flight: state.flights.list.length+1,
         updated_epoch: firebase.database.ServerValue.TIMESTAMP,
+        date: state.newFlight.date || moment().format('YYYY-MM-DD'),
       };
       console.log("Submitting new flight:",newFlight);
       dispatch(submitNewFlight(newFlight, ref));
