@@ -16,10 +16,10 @@ const LoginStatusMessage = ({ isLoggedIn, dispatch, firebaseAuthenticated }) => 
   return (
     <View>
       <Text style={styles.welcome}>
-        {isLoggedIn? 'You are "logged in" right now': "Google not authenticated"}
+        {isLoggedIn? 'You are logged in.': "Google not authenticated."}
       </Text>
       <Text style={styles.welcome}>
-        {(firebaseAuthenticated)?'Authenticated to Firebase':"Firebase not authenticted"}
+        {(firebaseAuthenticated)?'Authenticated to Firebase.':"Firebase not authenticated."}
       </Text>
       <Button
         onPress={() =>

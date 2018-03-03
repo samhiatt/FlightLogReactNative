@@ -78,7 +78,7 @@ export class FirebaseList {
   }
 
   unsubscribe() {
-    this._unsubscribe();
+    (typeof this._unsubscribe=='function') && this._unsubscribe();
   }
 
   unwrapSnapshot(snapshot) {

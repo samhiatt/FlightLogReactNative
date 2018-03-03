@@ -47,7 +47,7 @@ export default class FlightListItem extends React.Component {
     return (nextProps.updated_epoch>this.props.updated_epoch);
   }
   static propTypes = {
-    flight: PropTypes.number.isRequired,
+    // flight: PropTypes.number.isRequired,
     date: PropTypes.string.isRequired,
     duration_total_minutes: PropTypes.number.isRequired,
   };

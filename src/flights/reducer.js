@@ -5,7 +5,8 @@ import {
   REMOVE_FLIGHT_SUCCESS,
   FILTER_FLIGHTS,
   LOAD_FLIGHTS_SUCCESS,
-  UPDATE_FLIGHT_SUCCESS
+  UPDATE_FLIGHT_SUCCESS,
+  UNLOAD_FLIGHTS_SUCCESS,
 } from './action-types';
 
 import moment from 'moment'; // 2.20.1
@@ -32,7 +33,7 @@ export function flightsReducer(state = defaultState, {payload, type}) {
       return { ...state,
         deleted: payload,
         previous: state.list,
-        list: state.list.filter(task => task.key !== payload.key)
+        list: state.list.filter(flight => flight.key !== payload.key)
       };
 
     case FILTER_FLIGHTS:
@@ -50,9 +51,14 @@ export function flightsReducer(state = defaultState, {payload, type}) {
       return { ...state,
         deleted: null,
         previous: null,
-        list: state.list.map(task => {
-          return task.key === payload.key ? payload : task;
+        list: state.list.map(flight => {
+          return flight.key === payload.key ? payload : flight;
         })
+      };
+
+    case UNLOAD_FLIGHTS_SUCCESS:
+      return { ...state,
+        list: [],
       };
 
     case SIGN_OUT_SUCCESS:
@@ -65,7 +71,7 @@ export function flightsReducer(state = defaultState, {payload, type}) {
 }
 
 const timeFormat = "h:mm a";
-export function newFlightReducer(state={
+const defaultNewFlight={
   date:null,
   launch_time_iso:null,
   duration_total_minutes:null,
@@ -94,7 +100,8 @@ export function newFlightReducer(state={
   updated_epoch: null,
 
   validationErrors:[],
-}, action){
+};
+export function newFlightReducer(state=defaultNewFlight, action){
   switch (action.type) {
     case 'SET_NEW_FLIGHT_SITE_NAME':
       return { ...state, 
@@ -116,28 +123,28 @@ export function newFlightReducer(state={
       return { ...state, 
         comments:action.comments, 
       };
-    case 'SET_NEW_FLIGHT_START_TIME':
+    case 'SET_NEW_FLIGHT_LAUNCH_TIME':
       return { ...state, 
         launch_time_iso:action.launch_time_iso,
         duration_total_minutes:(state.landing_time_iso)? 
-          moment(state.landing_time_iso).diff(moment(action.launch_time_iso),'minutes').toString()
+          moment(state.landing_time_iso).diff(moment(action.launch_time_iso),'minutes')
           :state.duration_total_minutes, 
       };
     case 'SET_NEW_FLIGHT_DATE':
       return { ...state, 
         date:action.date, 
       };
-    case 'SET_NEW_FLIGHT_END_TIME': 
-      return { ...state, 
+    case 'SET_NEW_FLIGHT_LANDING_TIME': 
+      return { ...state,
         landing_time_iso: action.landing_time_iso,
         duration_total_minutes: (state.launch_time_iso)?
-          moment(action.landing_time_iso).diff(moment(state.launch_time_iso),'minutes').toString()
+          moment(action.landing_time_iso).diff(moment(state.launch_time_iso),'minutes')
           :state.launch_time_iso, 
       }
     case 'SET_NEW_FLIGHT_DURATION':
-      var duration_total_minutes = parseInt(action.duration_total_minutes);
+      var duration_total_minutes = action.duration_total_minutes;
       return {...state, 
-        duration_total_minutes: action.duration_total_minutes,
+        duration_total_minutes: duration_total_minutes,
         landing_time_iso: (state.launch_time_iso)? 
           moment(state.launch_time_iso).add(duration_total_minutes,'minutes').toISOString()
           :state.launch_time_iso,
@@ -175,12 +182,15 @@ export function newFlightReducer(state={
         xc_miles:action.xc_miles, 
       };
     case 'SUBMIT_NEW_FLIGHT':
-      let newState = { ...state, 
-        updated_epoch: new Date().getTime(), // TODO: set this server-side?
-      }
-      console.log("SUBMIT_NEW_FLIGHT reducer has state", newState);
-      console.log("SUBMIT_NEW_FLIGHT NOT YET IMPLEMENTED");
-      return newState;
+      // let newState = { ...state, 
+        //updated_iso: new Date().getTime(), // TODO: set this server-side?
+        // updated_iso: firebase.database.ServerValue.TIMESTAMP,
+        // flight: state.flights.
+      // }
+      // console.log("SUBMIT_NEW_FLIGHT reducer has state", newState);
+      console.log("SUBMIT_NEW_FLIGHT action",action);
+      // return newState;
+      return defaultNewFlight;
     default:
       return state
   }

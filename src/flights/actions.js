@@ -13,15 +13,8 @@ import {
   UPDATE_FLIGHT_SUCCESS
 } from './action-types';
 
-
-export function createFlight(title) {
-  return dispatch => {
-    flightList.push({completed: false, title})
-      .catch(error => dispatch(createFlightError(error)));
-  };
-}
-
 export function createFlightError(error) {
+  console.log('CREATE_FLIGHT_ERROR',flight);
   return {
     type: CREATE_FLIGHT_ERROR,
     payload: error
@@ -29,6 +22,7 @@ export function createFlightError(error) {
 }
 
 export function createFlightSuccess(flight) {
+  console.log('CREATE_FLIGHT_SUCCESS',flight);
   return {
     type: CREATE_FLIGHT_SUCCESS,
     payload: flight
@@ -36,6 +30,7 @@ export function createFlightSuccess(flight) {
 }
 
 export function removeFlight(flight) {
+  console.log('REMOVE_FLIGHT',flight);
   return dispatch => {
     flightList.remove(flight.key)
       .catch(error => dispatch(removeFlightError(error)));
@@ -43,6 +38,7 @@ export function removeFlight(flight) {
 }
 
 export function removeFlightError(error) {
+  console.log('REMOVE_FLIGHT_ERROR',flight);
   return {
     type: REMOVE_FLIGHT_ERROR,
     payload: error
@@ -50,6 +46,7 @@ export function removeFlightError(error) {
 }
 
 export function removeFlightSuccess(flight) {
+  console.log('REMOVE_FLIGHT_SUCCESS',flight);
   return {
     type: REMOVE_FLIGHT_SUCCESS,
     payload: flight
@@ -74,6 +71,7 @@ export function undeleteFlightError(error) {
 }
 
 export function updateFlightError(error) {
+  console.log('UPDATE_FLIGHT_ERROR',flight);
   return {
     type: UPDATE_FLIGHT_ERROR,
     payload: error
@@ -81,6 +79,7 @@ export function updateFlightError(error) {
 }
 
 export function updateFlight(flight, changes) {
+  console.log('UPDATE_FLIGHT',flight);
   return dispatch => {
     flightList.update(flight.key, changes)
       .catch(error => dispatch(updateFlightError(error)));
@@ -88,6 +87,7 @@ export function updateFlight(flight, changes) {
 }
 
 export function updateFlightSuccess(flight) {
+  console.log('UPDATE_FLIGHT_SUCCESS',flight);
   return {
     type: UPDATE_FLIGHT_SUCCESS,
     payload: flight
@@ -95,6 +95,7 @@ export function updateFlightSuccess(flight) {
 }
 
 export function loadFlightsSuccess(flights) {
+  console.log('LOAD_FLIGHTS_SUCCESS',flights.length+" flights loaded");
   return {
     type: LOAD_FLIGHTS_SUCCESS,
     payload: flights
@@ -111,7 +112,7 @@ export function filterFlights(filterType) {
 export function loadFlights() {
   return (dispatch, getState) => {
     const { auth } = getState().firebase;
-    console.log(`Loading ${auth.uid}/flight_log`);
+    console.log(`Subscribing to ${auth.uid}/flight_log`);
     flightList.path = `${auth.uid}/flight_log`;
     flightList.subscribe(dispatch);
   };
@@ -130,10 +131,10 @@ export function setDate(date) {
   return { type: 'SET_NEW_FLIGHT_DATE', date };
 }
 export function setStartTime(launch_time_iso) {
-  return { type: 'SET_NEW_FLIGHT_START_TIME', launch_time_iso };
+  return { type: 'SET_NEW_FLIGHT_LAUNCH_TIME', launch_time_iso };
 }
 export function setEndTime(landing_time_iso) {
-  return { type: 'SET_NEW_FLIGHT_END_TIME', landing_time_iso };
+  return { type: 'SET_NEW_FLIGHT_LANDING_TIME', landing_time_iso };
 }
 export function setDuration(duration_total_minutes) {
   // let errors = [];
@@ -157,7 +158,7 @@ export function setDuration(duration_total_minutes) {
   //   }
   // }
   
-  return { type: 'SET_NEW_FLIGHT_DURATION', duration_total_minutes:parseInt(duration_total_minutes) };
+  return { type: 'SET_NEW_FLIGHT_DURATION', duration_total_minutes: parseInt(duration_total_minutes) };
 }
 export function setSiteName(site_name){
   return { type:'SET_NEW_FLIGHT_SITE_NAME', site_name };
@@ -195,6 +196,15 @@ export function setLandingAltitude(landing_altitude){
 export function setXcMiles(xc_miles){
   return { type:'SET_NEW_FLIGHT_XC_MILES', xc_miles:parseFloat(xc_miles) };
 }
-export function submitNewFlight(){
-  return { type:'SUBMIT_NEW_FLIGHT' };
+export function submitNewFlight(payload,ref){
+  return { type:'SUBMIT_NEW_FLIGHT', 
+    payload,
+    meta: {
+      offline: {
+        effect: { ref },
+        commit: { type:'SUBMIT_NEW_FLIGHT_SUCCESS', payload },
+        rollback: { type:'SUBMIT_NEW_FLIGHT_ERROR', payload },
+      }
+    }
+  };
 }

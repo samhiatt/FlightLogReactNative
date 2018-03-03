@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'; // 5.0.6
 import { Text, StyleSheet, ScrollView, View, TouchableOpacity, TextInput, KeyboardAvoidingView, Button } from 'react-native';
 import DatePicker from 'react-native-datepicker'; // 1.6.0
-import { FormLabel, FormInput } from 'react-native-elements'; // 0.19.0
 import Autocomplete from 'react-native-autocomplete-input'; // 3.5.0
 import moment from 'moment'; // 2.20.1
 import "redux"; // 3.7.2
@@ -10,6 +9,7 @@ import {testAction, setStartTime, setEndTime, setDuration, setLaunchName, setDat
         setSiteName, setLandingLocation, setComments, setWingName, setWindSpeed, setWindDirection,
         setLaunchOrientation, setLaunchAltitude, setMaxAltitude, setLandingAltitude, setXcMiles, submitNewFlight
  } from '../flights/actions';
+import firebase from 'firebase';
 import { sites } from '../../data/stubs';
 
 const timePickerStyle = {
@@ -76,7 +76,7 @@ class NewFlightScreen extends Component {
 
         <View style={{flexDirection:'row', width:'100%', padding: 3}}>
           <View style={{flex:1}}>
-            <FormLabel>Date</FormLabel>
+            <Text>Date</Text>
             <DatePicker
               style={{width: '100%' }}
               date={this.props.date}
@@ -87,7 +87,7 @@ class NewFlightScreen extends Component {
             />
           </View>
           <View style={{flex:1}}>
-            <FormLabel>Launch</FormLabel>
+            <Text>Launch</Text>
             <DatePicker
               style={{width: '100%' }}
               date={moment(this.props.launch_time_iso).format('h:mm a')}
@@ -99,7 +99,7 @@ class NewFlightScreen extends Component {
             />
           </View>
           <View style={{flex:1}}>
-            <FormLabel>Landing</FormLabel>
+            <Text>Landing</Text>
             <DatePicker
               style={{width: '100%' }}
               date={moment(this.props.landing_time_iso).format('h:mm a')}
@@ -111,8 +111,8 @@ class NewFlightScreen extends Component {
             />
           </View>
           <View style={{flex:1}}>
-            <FormLabel>Duration</FormLabel>
-            <FormInput keyboardType='numeric' value={this.props.duration_total_minutes} 
+            <Text>Duration</Text>
+            <TextInput keyboardType='numeric' value={(this.props.duration_total_minutes!=null)?this.props.duration_total_minutes.toString():''} 
               inputStyle={{ width:'100%', color: 'black', fontSize: 14, textAlign:'center' }}
               onEndEditing={()=>console.log('TODO: Implement Validation')}
               onChangeText={this.props.setDuration.bind(this)}/>
@@ -122,14 +122,14 @@ class NewFlightScreen extends Component {
         <View style={{flexDirection:'row', width:'100%'}}>
 
           <View style={{flex:1, padding:3}}>
-            <FormLabel>Site</FormLabel>
-            <FormInput placeholder="" value={this.props.site_name}
+            <Text>Site</Text>
+            <TextInput placeholder="" value={this.props.site_name}
               onChangeText={this.props.setSiteName.bind(this)} />
           </View>
 
           <View style={{flex:1, padding:3}}>
-            <FormLabel>Wing Name</FormLabel>
-            <FormInput placeholder="" value={this.props.wing_name}
+            <Text>Wing Name</Text>
+            <TextInput placeholder="" value={this.props.wing_name}
               onChangeText={this.props.setWingName.bind(this)}
             />
           </View>
@@ -139,7 +139,7 @@ class NewFlightScreen extends Component {
         <View style={{flexDirection:'row', width:'100%'}}>
 
           <View style={{flex:1, padding:3}}>
-            <FormLabel>Takeoff</FormLabel>
+            <Text>Takeoff</Text>
             <Autocomplete
               autoCapitalize="words"
               autoCorrect={false}
@@ -161,15 +161,15 @@ class NewFlightScreen extends Component {
             />
           </View>
           <View style={{flex:1, padding:3}}>
-            <FormLabel>Launch Altitude</FormLabel>
-            <FormInput placeholder="" keyboardType="numeric"
-              value={this.props.launch_altitude.toString()}
+            <Text>Launch Altitude</Text>
+            <TextInput placeholder="" keyboardType="numeric"
+              value={(this.props.launch_altitude!=null)?this.props.launch_altitude.toString():''}
               onChangeText={this.props.setLaunchAltitude.bind(this)}
             />
           </View>
           <View style={{flex:1, padding:3}}>
-            <FormLabel>Launch Orientation</FormLabel>
-            <FormInput placeholder="" autoCapitalize='characters'
+            <Text>Launch Orientation</Text>
+            <TextInput placeholder="" autoCapitalize='characters'
               value={this.props.launch_orientation}
               onChangeText={this.props.setLaunchOrientation.bind(this)}
             />
@@ -179,58 +179,58 @@ class NewFlightScreen extends Component {
         <View style={{flexDirection:'row', width:'100%'}}>
 
           <View style={{flex:1, padding:3}}>
-            <FormLabel>Wind Speed</FormLabel>
-            <FormInput keyboardType="numeric"
+            <Text>Wind Speed</Text>
+            <TextInput keyboardType="numeric"
               value={this.props.wind_speed}
               onChangeText={this.props.setWindSpeed.bind(this)}
-              style={{borderWidth:1, borderStyle:'solid', width:'100%' }} placeholder=""/>
+              style={{width:'100%' }} placeholder=""/>
           </View>
           <View style={{flex:1, padding:3}}>
-            <FormLabel>Wind Direction</FormLabel>
-            <FormInput autoCapitalize='characters'
+            <Text>Wind Direction</Text>
+            <TextInput autoCapitalize='characters'
               value={this.props.wind_direction}
               onChangeText={this.props.setWindDirection.bind(this)}
-              style={{borderWidth:1, borderStyle:'solid', width:'100%' }} placeholder=""/>
+              style={{width:'100%' }} placeholder=""/>
           </View>
         </View>
         
         <View style={{flexDirection:'row', width:'100%'}}>
 
           <View style={{flex:1, padding:3}}>
-            <FormLabel>Landing Location</FormLabel>
-            <FormInput value={this.props.landing_location}
+            <Text>Landing Location</Text>
+            <TextInput value={this.props.landing_location}
             onChangeText={this.props.setLandingLocation.bind(this)}
-            style={{borderWidth:1, borderStyle:'solid', width:'100%' }} placeholder=""/>
+            style={{width:'100%' }} placeholder=""/>
           </View>
           <View style={{flex:1, padding:3}}>
-            <FormLabel>Landing Altitude</FormLabel>
-            <FormInput keyboardType="numeric"
-              value={this.props.landing_altitude.toString()}
+            <Text>Landing Altitude</Text>
+            <TextInput keyboardType="numeric"
+              value={(this.props.landing_altitude!=null)?this.props.landing_altitude.toString():''}
               onChangeText={this.props.setLandingAltitude.bind(this)}
-              style={{borderWidth:1, borderStyle:'solid', width:'100%' }} placeholder=""/>
+              style={{width:'100%' }} placeholder=""/>
           </View>
         </View>
 
         <View style={{flexDirection:'row', width:'100%'}}>
 
           <View style={{flex:1, padding:3}}>
-            <FormLabel>Max Altitude</FormLabel>
-            <FormInput keyboardType="numeric"
-              value={this.props.max_altitude.toString()}
+            <Text>Max Altitude</Text>
+            <TextInput keyboardType="numeric"
+              value={(this.props.max_altitude!=null)?this.props.max_altitude.toString():''}
               onChangeText={this.props.setMaxAltitude.bind(this)}
-              style={{borderWidth:1, borderStyle:'solid', width:'100%' }} placeholder=""/>
+              style={{width:'100%' }} placeholder=""/>
           </View>
           <View style={{flex:1, padding:3}}>
-            <FormLabel>XC Miles</FormLabel>
-            <FormInput keyboardType="numeric"
-              value={this.props.xc_miles.toString()}
+            <Text>XC Miles</Text>
+            <TextInput keyboardType="numeric"
+              value={(this.props.xc_miles!=null)?this.props.xc_miles.toString():''}
               onChangeText={this.props.setXcMiles.bind(this)}
-              style={{borderWidth:1, borderStyle:'solid', width:'100%' }} placeholder=""/>
+              style={{width:'100%' }} placeholder=""/>
           </View>
         </View>
 
-        <FormLabel>Comments</FormLabel>
-        <FormInput multiline placeholder="" value={this.props.comments}
+        <Text>Comments</Text>
+        <TextInput multiline placeholder="" value={this.props.comments}
           onChangeText={this.props.setComments.bind(this)}
         />
 
@@ -309,74 +309,79 @@ const mapStateToProps = (state)=>{
   };
 }
 
-const mapDispatchToProps = (dispatch, state)=>{
-  return {
-    setDate:(time) => {
+const mapDispatchToProps =  {
+    setDate:(time)=>(dispatch,getState) => {
       dispatch(setDate(time));
     },
-    setStartTime:(t)=>{
+    setStartTime:(t)=>(dispatch,getState)=>{
       dispatch(setStartTime(t))
     },
-    setEndTime:(time) => {
+    setEndTime:(time)=>(dispatch,getState) => {
       dispatch(setEndTime(time));
     },
-    setDuration:(duration) => {
+    setDuration:(duration)=>(dispatch,getState) => {
       console.log("Dispatching action",duration);
       dispatch(setDuration(duration));
     },
-    setSiteName:(name)=>{
+    setSiteName:(name)=>(dispatch,getState)=>{
       console.log("setSiteName",setSiteName(name));
       dispatch(setSiteName(name));
     },
-    setLaunchName:(name)=>{
+    setLaunchName:(name)=>(dispatch,getState)=>{
       console.log("setLaunchName",setLaunchName(name));
       dispatch(setLaunchName(name));
     },
-    setLandingLocation:(name)=>{
+    setLandingLocation:(name)=>(dispatch,getState)=>{
       console.log("setLandingLocation",setLandingLocation(name));
       dispatch(setLandingLocation(name));
     },
-    setWingName:(wing_name)=>{
+    setWingName:(wing_name)=>(dispatch,getState)=>{
       console.log("setComments",setWingName(wing_name));
       dispatch(setWingName(wing_name));
     },
-    setWindSpeed:(wind_speed)=>{
+    setWindSpeed:(wind_speed)=>(dispatch,getState)=>{
       console.log("setWindSpeed",setWindSpeed(wind_speed));
       dispatch(setWindSpeed(wind_speed));
     },
-    setWindDirection:(wind_direction)=>{
+    setWindDirection:(wind_direction)=>(dispatch,getState)=>{
       console.log("setWindDirection",setWindDirection(wind_direction));
       dispatch(setWindDirection(wind_direction));
     },
-    setLaunchOrientation:(launch_orientation)=>{
+    setLaunchOrientation:(launch_orientation)=>(dispatch,getState)=>{
       console.log("setLaunchOrientation",setLaunchOrientation(launch_orientation));
       dispatch(setLaunchOrientation(launch_orientation));
     },
-    setLaunchAltitude:(launch_altitude)=>{
+    setLaunchAltitude:(launch_altitude)=>(dispatch,getState)=>{
       console.log("setLaunchAltitude",setLaunchAltitude(launch_altitude));
       dispatch(setLaunchAltitude(launch_altitude));
     },
-    setMaxAltitude:(max_altitude)=>{
+    setMaxAltitude:(max_altitude)=>(dispatch,getState)=>{
       console.log("setMaxAltitude",setMaxAltitude(max_altitude));
       dispatch(setMaxAltitude(max_altitude));
     },
-    setLandingAltitude:(landing_altitude)=>{
+    setLandingAltitude:(landing_altitude)=>(dispatch,getState)=>{
       console.log("setLandingAltitude",setLandingAltitude(landing_altitude));
       dispatch(setLandingAltitude(landing_altitude));
     },
-    setXcMiles:(xc_miles)=>{
+    setXcMiles:(xc_miles)=>(dispatch,getState)=>{
       console.log("setXcMiles",setXcMiles(xc_miles));
       dispatch(setXcMiles(xc_miles));
     },
-    setComments:(comments)=>{
+    setComments:(comments)=>(dispatch,getState)=>{
       console.log("setComments",setComments(comments));
       dispatch(setComments(comments));
     },
-    submitNewFlight:()=>{
-      console.log("Submitting new flight");
-      dispatch(submitNewFlight());
-    }
+    submitNewFlight:(e)=>(dispatch,getState)=>{
+      const state = getState();
+      const ref = state.firebase.auth.uid + '/flight_log/';
+      // Set flight number before submitting 
+      const newFlight = { ...state.newFlight, 
+        flight: state.flights.list.length+1,
+        updated_epoch: firebase.database.ServerValue.TIMESTAMP,
+      };
+      console.log("Submitting new flight:",newFlight);
+      dispatch(submitNewFlight(newFlight, ref));
+    },
   };
-}
 
 export default connect(mapStateToProps,mapDispatchToProps)(NewFlightScreen);

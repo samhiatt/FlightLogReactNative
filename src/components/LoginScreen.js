@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // import { Button, StyleSheet, Text, View } from 'react-native';
-import { Container, Header, Content, Form, Button, Item, Input, Text, Label } from 'native-base';
+import { Container, Content, Button, Text } from 'native-base';
 import { dispatchSignInWithGoogle, dispatchSignInWithFacebook } from '../auth/actions';
 
 
@@ -37,7 +37,7 @@ class LoginScreen extends React.Component {
 
             <Text>...</Text>
 
-            <Button block primary onPress={this.props.signinWithFacebook} >
+            <Button onPress={this.props.signinWithFacebook} >
               <Text>Sign In With Facebook</Text>
             </Button>
 

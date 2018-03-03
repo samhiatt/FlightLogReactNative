@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { BackHandler } from "react-native";
-import { Text, Container, Content } from 'native-base';
+import { View, Text, BackHandler } from "react-native";
 import Expo from 'expo';
 import { addNavigationHelpers, StackNavigator, NavigationActions } from 'react-navigation';
 
@@ -101,9 +100,9 @@ class AppWithNavigationState extends React.Component {
         screenProps={{user:this.props.user}}
       />
     ):(
-      <Container><Content style={{marginTop:30}}>
+      <View style={{marginTop:30}}>
         <Text>Waiting for state to rehydrate...</Text>
-      </Content></Container> 
+      </View>
     );
   }
 }

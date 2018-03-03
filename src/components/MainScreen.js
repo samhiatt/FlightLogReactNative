@@ -7,6 +7,7 @@ import { NavigationActions } from 'react-navigation';
 import { RESET_STATE } from "@redux-offline/redux-offline/lib/constants";
 import { getGoogleAuth } from '../auth/google';
 import { dispatchSignInWithGoogle } from '../auth/actions';
+import { unloadFlights } from '../flights/actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const MainScreen = ({goToProfile, testIt, clearPendingActions, testLogin, goToFlights, goToNewFlightScreen}) => (
+const MainScreen = ({goToProfile, testIt, clearPendingActions, testLogin, goToFlights, goToNewFlightScreen, clearFlightList}) => (
   <View style={styles.container}>
     <LoginStatusMessage />
     <AuthButton />
@@ -52,6 +53,11 @@ const MainScreen = ({goToProfile, testIt, clearPendingActions, testLogin, goToFl
       onPress={testLogin}
     />
     <Text></Text>
+    <Text></Text>
+    <Button
+      title='Clear Flight List'
+      onPress={clearFlightList}
+    />
   </View>
 );
 
@@ -96,7 +102,10 @@ const mapDispatchToProps = {
   //     console.log("Have auth",auth);
   //   });
   // },
-  testLogin: dispatchSignInWithGoogle
+  testLogin: dispatchSignInWithGoogle,
+  clearFlightList:()=>dispatch=>{
+    dispatch(unloadFlights());
+  },
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainScreen);

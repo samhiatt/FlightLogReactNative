@@ -168,8 +168,6 @@ const mapStateToProps = (state)=>{
 
   // derived:
   landing_time_iso:state.newFlight.landing_time_iso,
-  launch_time_epoch: null,
-  landing_time_epoch: null,
   altitude_gain: null,
   total_airtime: null,
   vertical_drop: null,
