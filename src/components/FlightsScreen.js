@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, Text, View, VirtualizedList, ActivityIndicator, Button, ScrollView } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 // import { List, ListItem } from 'react-native-elements';
 
 import FlightListItem, { ITEM_HEIGHT } from './FlightListItem';
-import { loadFlights } from '../flights/actions';
+// import { loadFlights } from '../flights/actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -61,12 +62,12 @@ class FlightsScreen extends React.Component {
     // this.props.getFlights();
   }
   render(){
-    const { isLoggedIn, displayName, isFirebaseAuthenticated, flights, getFlights } = this.props;
+    const { isLoggedIn, displayName, isFirebaseAuthenticated, flights, goToNewFlightScreen } = this.props;
     return (isLoggedIn)? (
       <View style={styles.container}>
         <Button
-          title='Load Flights'
-          onPress={getFlights}
+          title='New Flight'
+          onPress={goToNewFlightScreen}
         />
         <FlightsList flights={flights}/>
       </View>
@@ -91,9 +92,12 @@ const mapStateToProps = state => ({
   flights: state.flights.list,
 });
 const mapDispatchToProps = {
-  getFlights: ()=>dispatch=>{
-    dispatch(loadFlights());
-  }
+  // getFlights: ()=>dispatch=>{
+  //   dispatch(loadFlights());
+  // },
+  goToNewFlightScreen: ()=>dispatch=>{
+    dispatch(NavigationActions.navigate({routeName:'NewFlight'}));
+  },
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FlightsScreen);
