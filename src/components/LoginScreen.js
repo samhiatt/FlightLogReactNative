@@ -23,7 +23,7 @@ class LoginScreen extends React.Component {
   };
   render(){
     let {email, password} = this.state;
-    let {isLoginPending, isLoggedIn, loginError, navigation} = this.props;
+    let {isLoginPending, isLoggedIn, loginError, navigation, firebaseJson, firebaseAuthError,authJson} = this.props;
     return (
       <Container>
         {(isLoginPending)? 
@@ -46,6 +46,21 @@ class LoginScreen extends React.Component {
               {isLoggedIn? "Logged in":"Not logged in"}
               {loginError && loginError.toString()}
             </Text>
+            <Text>
+              {firebaseAuthError}
+            </Text>
+            <Text>
+            Firebase JSON:
+            </Text>
+            <Text>
+            {firebaseJson}
+            </Text>
+            <Text>
+            Auth JSON:
+            </Text>
+            <Text>
+            {authJson}
+            </Text>
           </Content> 
         }
       </Container>
@@ -58,6 +73,9 @@ const mapStateToProps = (state) => {
     isLoginPending: state.auth.isLoginPending,
     isLoggedIn: state.auth.isLoggedIn,
     loginError: state.auth.loginError,
+    firebaseAuthError: JSON.stringify(state.firebase.authenticationError),
+    firebaseJson: JSON.stringify(state.firebase),
+    authJson: JSON.stringify(state.auth),
   };
 }
 

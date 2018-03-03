@@ -5,6 +5,7 @@ import DatePicker from 'react-native-datepicker'; // 1.6.0
 import Autocomplete from 'react-native-autocomplete-input'; // 3.5.0
 import moment from 'moment'; // 2.20.1
 import "redux"; // 3.7.2
+import { NavigationActions } from 'react-navigation';
 import {testAction, setStartTime, setEndTime, setDuration, setLaunchName, setDate,
         setSiteName, setLandingLocation, setComments, setWingName, setWindSpeed, setWindDirection,
         setLaunchOrientation, setLaunchAltitude, setMaxAltitude, setLandingAltitude, setXcMiles, submitNewFlight
@@ -65,7 +66,7 @@ class NewFlightScreen extends Component {
   // }
   render() {
     return (
-      <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={80}>  
+      <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={200}>  
       <ScrollView contentContainerStyle={styles.container} >
       <View style={{flex:1}}>
         <Text style={styles.header}>
@@ -382,6 +383,7 @@ const mapDispatchToProps =  {
       };
       console.log("Submitting new flight:",newFlight);
       dispatch(submitNewFlight(newFlight, ref));
+      dispatch(NavigationActions.back());
     },
   };
 

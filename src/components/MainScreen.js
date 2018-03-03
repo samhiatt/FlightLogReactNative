@@ -7,7 +7,7 @@ import { NavigationActions } from 'react-navigation';
 import { RESET_STATE } from "@redux-offline/redux-offline/lib/constants";
 import { getGoogleAuth } from '../auth/google';
 import { dispatchSignInWithGoogle } from '../auth/actions';
-import { unloadFlights } from '../flights/actions';
+import { unloadFlights, loadFlights } from '../flights/actions';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const MainScreen = ({goToProfile, testIt, clearPendingActions, testLogin, goToFlights, goToNewFlightScreen, clearFlightList}) => (
+const MainScreen = ({goToProfile, testIt, clearPendingActions, testLogin, goToFlights, goToNewFlightScreen, clearFlightList, loadFlights}) => (
   <View style={styles.container}>
     <LoginStatusMessage />
     <AuthButton />
@@ -34,13 +34,13 @@ const MainScreen = ({goToProfile, testIt, clearPendingActions, testLogin, goToFl
     />
     <Text></Text>
     <Button
-      title='New Flight'
-      onPress={goToNewFlightScreen}
+      title='Load Flights'
+      onPress={loadFlights}
     />
     <Text></Text>
     <Button
-      title='Test Offline Commit'
-      onPress={testIt}
+      title='New Flight'
+      onPress={goToNewFlightScreen}
     />
     <Text></Text>
     <Button
@@ -83,16 +83,16 @@ const mapDispatchToProps = {
   goToNewFlightScreen: ()=>dispatch=>{
     dispatch(NavigationActions.navigate({routeName:'NewFlight'}));
   },
-  testIt: ()=>(dispatch,getState)=>{
-    console.log("testIt",getState())
-    dispatch({type:'OFFFLINE_ACTION_TEST',payload:{foo:'BAA'},meta:{
-      offline:{
-        effect:{ref:getState().firebase.auth.uid+'/flights/410',retries:2},
-        commit:{action:'OFFFLINE_ACTION_TEST_COMMIT',meta:{foo:'baz'}},
-        rollback:{action:'OFFFLINE_ACTION_TEST_ROLLBACK',meta:{foo:'bar'}},
-      }
-    }});
-  },
+  // testIt: ()=>(dispatch,getState)=>{
+  //   console.log("testIt",getState())
+  //   dispatch({type:'OFFFLINE_ACTION_TEST',payload:{foo:'BAA'},meta:{
+  //     offline:{
+  //       effect:{ref:getState().firebase.auth.uid+'/flights/410',retries:2},
+  //       commit:{action:'OFFFLINE_ACTION_TEST_COMMIT',meta:{foo:'baz'}},
+  //       rollback:{action:'OFFFLINE_ACTION_TEST_ROLLBACK',meta:{foo:'bar'}},
+  //     }
+  //   }});
+  // },
   clearPendingActions:()=>dispatch=>{
     dispatch({type:RESET_STATE});
   },
@@ -105,6 +105,9 @@ const mapDispatchToProps = {
   testLogin: dispatchSignInWithGoogle,
   clearFlightList:()=>dispatch=>{
     dispatch(unloadFlights());
+  },
+  loadFlightList:()=>dispatch=>{
+    dispatch(loadFlights());
   },
 }
 

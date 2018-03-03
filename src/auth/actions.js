@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import { firebaseApp, firebaseAuth } from '../firebase';
 import { getGoogleAuth } from './google';
+import Expo from 'expo';
 
 export const SET_LOGIN_PENDING = 'SET_LOGIN_PENDING';
 export function setLoginPending(isLoginPending) {

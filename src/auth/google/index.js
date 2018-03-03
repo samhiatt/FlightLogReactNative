@@ -1,6 +1,5 @@
 import Expo from 'expo';
-import { androidClientId } from './config';
-
+import { androidClientId, androidStandaloneAppClientId } from './config';
 
 export function getGoogleAuth(googleAuth={idToken:null}){
   return new Promise((resolve,reject)=>{
@@ -11,6 +10,7 @@ export function getGoogleAuth(googleAuth={idToken:null}){
     else { 
       return Expo.Google.logInAsync({ 
 				androidClientId,
+        androidStandaloneAppClientId,
 				scopes: ['profile','email','openid'],
 			}).then((result,err)=>{
         console.log(result,"google login result:");

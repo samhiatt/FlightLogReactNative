@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "FlightLogReactNative",
-    "description": "Try out react-navigation with this awesome Redux example",
+    "description": "Flight Log built with React Native",
     "version": "1.0.0",
     "slug": "FlightLogReactNative",
     "privacy": "public",
@@ -17,6 +17,15 @@
     },
     "ios": {
       "supportsTablet": true
+    },
+    "android":{
+      "package":"com.samsmaps.flightlogreactnative",
+      "config":{
+        "googleSignIn":{
+          "apiKey":"AIzaSyCpWwKHu9L1Nm-BdjmO4GdGb_jCLbLufk4",
+          "certificateHash":"EAEE4CC045741E567121B3AE494F53378E5261E6"
+        }
+      }
     }
   }
 }
