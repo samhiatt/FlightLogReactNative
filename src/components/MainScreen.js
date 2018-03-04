@@ -53,7 +53,6 @@ const MainScreen = ({goToProfile, testIt, clearPendingActions, testLogin, goToFl
       onPress={testLogin}
     />
     <Text></Text>
-    <Text></Text>
     <Button
       title='Clear Flight List'
       onPress={clearFlightList}

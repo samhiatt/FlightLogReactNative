@@ -175,7 +175,7 @@ export function dispatchSignInWithGoogle() {
         dispatch(setGoogleAuth(auth));
       // }
       const credential = firebase.auth.GoogleAuthProvider.credential(auth.idToken);
-      // dispatch(beginFirebaseAuth());
+      dispatch(setFirebaseAuthenticationPending(true));
       console.log("credential",credential);
       // firebaseApp.auth().onAuthStateChanged((user)=>{
       //   if (user) {

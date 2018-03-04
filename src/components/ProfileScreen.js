@@ -34,7 +34,6 @@ const ProfileScreen = ({
     <ScrollView style={styles.container}>
       <Text style={styles.welcome}>Not logged in</Text>
       <AuthButton /> 
-      <Text>{stateJson}</Text>
     </ScrollView>
   );
 
@@ -47,7 +46,6 @@ const mapStateToProps = state => ({
   isFirebaseAuthenticated: state.firebase.isAuthenticated, 
   displayName: (state.firebase.auth)? state.firebase.auth.displayName : "",
   authProvider: (state.firebase.auth)? state.firebase.auth.providerId : '',
-  stateJson: JSON.stringify(state),
 });
 
 export default connect(mapStateToProps)(ProfileScreen);
